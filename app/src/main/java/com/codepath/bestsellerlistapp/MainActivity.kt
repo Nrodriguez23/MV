@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.codepath.bestsellerlistapp.R.id
-import com.codepath.bestsellerlistapp.R.id.buy_button
+
 
 /**
  * The MainActivity for the BestSellerList app.

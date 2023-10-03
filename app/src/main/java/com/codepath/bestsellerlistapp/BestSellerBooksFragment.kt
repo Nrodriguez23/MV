@@ -23,7 +23,7 @@ import org.json.JSONObject
 // --------------------------------//
 // CHANGE THIS TO BE YOUR API KEY  //
 // --------------------------------//
-private const val API_KEY = "khDCV9r7aAXNqxGTjnPBChJ1Y2Vvcg2m"
+private const val API_KEY = "a07e22bc18f5cb106bfe4cc1f83ad8ed"
 
 /*
  * The class for the only fragment in the app, which contains the progress bar,
@@ -57,11 +57,11 @@ class BestSellerBooksFragment : Fragment(), OnListFragmentInteractionListener {
         // Create and set up an AsyncHTTPClient() here
         val client = AsyncHttpClient()
         val params = RequestParams()
-        params["api-key"] = API_KEY
+        params["api_key"] = API_KEY
 
         // Using the client, perform the HTTP request
         client[
-            "https://api.nytimes.com/svc/books/v3/lists/current/hardcover-fiction.json",
+            "https://api.themoviedb.org/3/movie/now_playing",
             params,
             object : JsonHttpResponseHandler()
 
@@ -75,17 +75,12 @@ class BestSellerBooksFragment : Fragment(), OnListFragmentInteractionListener {
                 headers: Headers,
                 json: JsonHttpResponseHandler.JSON
             ) {
-                // The wait for a response is over
-                val resultsJSON : JSONObject = json.jsonObject.get("results") as JSONObject
-                val booksRawJSON : String = resultsJSON.get("books").toString()
-
-
-
+               // The wait for a response is over
+                val resultsJSON : String = json.jsonObject.get("results").toString()
                 val gson = Gson()
-                val arrayBookType = object : TypeToken<List<BestSellerBook>>() {}.type
-                val models : List<BestSellerBook> = gson.fromJson(booksRawJSON, arrayBookType)
-
-                recyclerView.adapter = BestSellerBooksRecyclerViewAdapter(context!!,models, this@BestSellerBooksFragment)
+                val arrayBookType = object : TypeToken<List<Movie>>() {}.type
+                val models : List<Movie> = gson.fromJson(resultsJSON,arrayBookType)
+                recyclerView.adapter = BestSellerBooksRecyclerViewAdapter(models, this@BestSellerBooksFragment)
 
 
                 Log.d("BestSellerBooksFragment", "response successful")
@@ -128,8 +123,8 @@ class BestSellerBooksFragment : Fragment(), OnListFragmentInteractionListener {
     /*
      * What happens when a particular book is clicked.
      */
-    override fun onItemClick(item: BestSellerBook) {
-        Toast.makeText(context, "test: " + item.title, Toast.LENGTH_LONG).show()
+    override fun onItemClick(item: Movie) {
+        Toast.makeText(context, "test: " + item.original_title, Toast.LENGTH_LONG).show()
     }
 
 }

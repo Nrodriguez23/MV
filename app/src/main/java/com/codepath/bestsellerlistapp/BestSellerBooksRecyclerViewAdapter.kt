@@ -14,13 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.codepath.bestsellerlistapp.R.id
 
+
 /**
  * [RecyclerView.Adapter] that can display a [BestSellerBook] and makes a call to the
  * specified [OnListFragmentInteractionListener].
  */
 class BestSellerBooksRecyclerViewAdapter(
-    val context: Context,
-    private val books: List<BestSellerBook>,
+
+    private val books: List<Movie>,
     private val mListener: OnListFragmentInteractionListener?
 )
     : RecyclerView.Adapter<BestSellerBooksRecyclerViewAdapter.BookViewHolder>()
@@ -36,13 +37,13 @@ class BestSellerBooksRecyclerViewAdapter(
      * (Yes, the same ones as in the XML layout files!)
      */
     inner class BookViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        var mItem: BestSellerBook? = null
+        var mItem: Movie? = null
         val mBookTitle: TextView = mView.findViewById<View>(id.book_title) as TextView
         val mBookAuthor: TextView = mView.findViewById<View>(id.book_author) as TextView
         val mBookRanking : TextView = mView.findViewById<View>(id.ranking) as TextView
         val book_image = mView.findViewById<ImageView>(id.book_image)
         val mBook_description : TextView = mView.findViewById<View>(id.book_description) as TextView
-        val mBookButton = mView.findViewById(id.buy_button) as Button
+
             override fun toString(): String {
             return mBookTitle.toString() + " '" + mBookAuthor.text + "'"
         }
@@ -55,25 +56,21 @@ class BestSellerBooksRecyclerViewAdapter(
     override fun onBindViewHolder(holder: BookViewHolder, position: Int)   {
         val book = books[position]
 
+
         holder.mItem = book
-        Glide
-            .with(context)
-            .load(book.bookImageUrl)
+        Glide.with(holder.mView)
+            .load("https://image.tmdb.org/t/p/w500/${book.poster_path}")
             .fitCenter()
             .into(holder.book_image);
 
-        holder.mBookTitle.text = book.title
-        holder.mBookAuthor.text = book.author
-        holder.mBookRanking.text = book.rank
-        holder.mBook_description.text =book.description
+        holder.mBookTitle.text = book.original_title
+        holder.mBookAuthor.text = book.overview
+
         holder.mView.setOnClickListener {
             holder.mItem?.let { book ->
                 mListener?.onItemClick(book)
             }
-            holder.mBookButton.setOnClickListener {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(book.amazonUrl))
-                startActivity(it.context, browserIntent, null)
-            }
+
 
         }
     }
